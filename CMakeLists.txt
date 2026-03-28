@@ -21,6 +21,12 @@ include_directories(${IGFD_DIR})
 include_directories(${IMGUIZMO_DIR})
 include_directories(${XATLAS_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src/imGuiUi)
+include_directories(${CMAKE_SOURCE_DIR}/src/renderer)
+include_directories(${CMAKE_SOURCE_DIR}/src/renderer/renderPasses)
+include_directories(${CMAKE_SOURCE_DIR}/src/parsers)
+include_directories(${CMAKE_SOURCE_DIR}/src/utils)
+include_directories(${CMAKE_SOURCE_DIR}/src/glewGlfwHandlers)
 include_directories(${THIRD_PARTY_DIR})
 
 
@@ -68,7 +74,12 @@ if (WIN32)
         ${GLEW_DIR}/lib/Release/x64/glew32s.lib 
         opengl32)
 else()
-    target_link_libraries(Mesh2Splat glfw glew GL) #todo
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GLFW3 REQUIRED glfw3)
+    pkg_check_modules(GLEW REQUIRED glew)
+    find_package(OpenGL REQUIRED)
+    target_include_directories(Mesh2Splat PRIVATE ${GLFW3_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
+    target_link_libraries(Mesh2Splat ${GLFW3_LIBRARIES} ${GLEW_LIBRARIES} OpenGL::GL)
 endif()
 
 set_target_properties(Mesh2Splat PROPERTIES 

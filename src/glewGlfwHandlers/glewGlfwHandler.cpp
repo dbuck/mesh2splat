@@ -5,7 +5,7 @@
 
 #include "glewGlfwHandler.hpp"
 
-GlewGlfwHandler::GlewGlfwHandler(glm::ivec2 windowDimensions, std::string windowName)
+GlewGlfwHandler::GlewGlfwHandler(glm::ivec2 windowDimensions, std::string windowName, bool visible)
 {
     if (!glfwInit())
         exit(-1);
@@ -14,6 +14,8 @@ GlewGlfwHandler::GlewGlfwHandler(glm::ivec2 windowDimensions, std::string window
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    if (!visible)
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     //glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
     this->window = glfwCreateWindow(windowDimensions.x, windowDimensions.y, windowName.c_str(), NULL, NULL);

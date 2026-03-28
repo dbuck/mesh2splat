@@ -3,7 +3,7 @@
 //        Copyright (c) 2025 Electronic Arts Inc. All rights reserved.       //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "ImGuiUI.hpp"
+#include "ImGuiUi.hpp"
 
 ImGuiUI::ImGuiUI(float defaultGaussianStd, float defaultMesh2SPlatQuality)
     : resolutionIndex(0),
@@ -368,7 +368,7 @@ void ImGuiUI::renderBatchWindow()
         }
         ImGui::PopStyleColor();
         ImGui::SameLine();
-        ImGui::TextUnformatted("(Running… conversions are dispatched by app loop)");
+        ImGui::TextUnformatted("(Runningï¿½ conversions are dispatched by app loop)");
     }
 
     // Progress
@@ -547,7 +547,7 @@ void ImGuiUI::enqueueFolder(const std::string& dir)
         const std::filesystem::path inputPath = e.path();
         const std::string inputStem = inputPath.stem().string();
 
-        // Batch output dir: if user picked one, use it; else (fallback) the input’s parent
+        // Batch output dir: if user picked one, use it; else (fallback) the inputï¿½s parent
         std::filesystem::path outDir = destinationFilePathFolder.empty()
             ? inputPath.parent_path()
             : std::filesystem::path(destinationFilePathFolder);

@@ -4,6 +4,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "utils.hpp"
+#ifndef _WIN32
+#include <unistd.h>
+#endif
 
 namespace utils
 {
@@ -328,7 +331,7 @@ namespace utils
 
             //rgba_normal_info = glm::vec3(srgb_to_linear_float(rgba_normal_info.x), srgb_to_linear_float(rgba_normal_info.y), srgb_to_linear_float(rgba_normal_info.z));
         
-            if (!isnan(interpolatedTangent.x) && !isnan(interpolatedTangent.y) && !isnan(interpolatedTangent.z) && !isnan(interpolatedTangent.w))
+            if (!std::isnan(interpolatedTangent.x) && !std::isnan(interpolatedTangent.y) && !std::isnan(interpolatedTangent.z) && !std::isnan(interpolatedTangent.w))
             {
                 glm::vec3 tangentXYZ(interpolatedTangent);
                 glm::vec3 retrievedNormal = glm::normalize(glm::normalize(glm::vec3(rgba_normal_info) * 2.0f - 1.0f) * glm::vec3(material.normalScale, material.normalScale, 1.0f)); //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#_material_normaltextureinfo_scale
@@ -452,9 +455,19 @@ namespace utils
     }
 
     std::string getExecutablePath() {
+#ifdef _WIN32
         char buffer[MAX_PATH];
         GetModuleFileNameA(nullptr, buffer, MAX_PATH);
         return std::string(buffer);
+#else
+        char buffer[4096];
+        ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+        if (len != -1) {
+            buffer[len] = '\0';
+            return std::string(buffer);
+        }
+        return std::string();
+#endif
     }
 
     std::string getExecutableDir() {
