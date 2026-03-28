@@ -678,6 +678,27 @@ void SceneManager::exportPly(const std::string outputFile, unsigned int exportFo
 }
 
 
+void SceneManager::exportPlySync(const std::string outputFile, unsigned int exportFormat)
+{
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, renderContext.gaussianBuffer);
+
+    std::vector<utils::GaussianDataSSBO> cpuData(renderContext.numberOfGaussians);
+
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    glGetBufferSubData(
+        GL_SHADER_STORAGE_BUFFER,
+        0,
+        renderContext.numberOfGaussians * sizeof(utils::GaussianDataSSBO),
+        cpuData.data()
+    );
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    float scaleMultiplier = renderContext.gaussianStd / static_cast<float>(renderContext.resolutionTarget);
+    parsers::savePlyVector(outputFile, cpuData, exportFormat, scaleMultiplier);
+}
+
 void SceneManager::updateMeshes()
 {
 }
